@@ -1,10 +1,10 @@
-import {Document, model, Model, Schema} from 'mongoose';
+import {Document, model, Model, Schema} from "mongoose";
 
 const rentalSchema: Schema = new Schema({
     title: {
         type: String,
         required: true,
-        max: [128, 'Too long, max is 128 characters']
+        max: [128, "Too long, max is 128 characters"]
     },
     city: {
         type: String,
@@ -14,7 +14,7 @@ const rentalSchema: Schema = new Schema({
     street: {
         type: String,
         required: true,
-        min: [4, 'Too short, min is 4 characters']
+        min: [4, "Too short, min is 4 characters"]
     },
     category: {
         type: String,
@@ -38,18 +38,18 @@ const rentalSchema: Schema = new Schema({
 });
 
 interface IRental extends Document {
-    title: string,
-    city: string,
-    street: string,
-    category: string,
-    image: string,
-    bedrooms: number,
-    shared: boolean,
-    description: string,
-    dailyRate: number,
-    createdAt: Date
+    title: string;
+    city: string;
+    street: string;
+    category: string;
+    image: string;
+    bedrooms: number;
+    shared: boolean;
+    description: string;
+    dailyRate: number;
+    createdAt: Date;
 }
 
-const RentalModel: Model<IRental> = model<IRental>('Rental', rentalSchema);
+const RentalModel: Model<IRental> = model<IRental>("Rental", rentalSchema);
 
-export {RentalModel}
+export {RentalModel};

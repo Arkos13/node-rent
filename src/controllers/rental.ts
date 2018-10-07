@@ -25,7 +25,7 @@ export class RentalController {
         RentalModel.findById(rentalId)
             .exec(function(err, foundRental) {
                 if (err || !foundRental) {
-                    return res.status(422).send({errors: [{title: 'Rental Error!', detail: 'Could not find Rental!'}]});
+                    return res.status(422).send({errors: [{title: "Rental Error!", detail: "Could not find Rental!"}]});
                 }
                 callback(foundRental);
             });

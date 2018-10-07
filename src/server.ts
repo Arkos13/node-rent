@@ -1,9 +1,9 @@
 import * as cookieParser from "cookie-parser";
 import * as express from "express";
 import * as logger from "morgan";
-import * as mongoose from 'mongoose';
+import * as mongoose from "mongoose";
 import * as dotenv from "dotenv";
-import {createServer, Server} from 'http';
+import {createServer, Server} from "http";
 import {RentalRoute} from "./routes/rentals";
 
 dotenv.config();
@@ -47,7 +47,7 @@ export class ServerApp {
      * */
     public config() {
         this.port = process.env.PORT || 8080;
-        this.app.use(logger('dev'));
+        this.app.use(logger("dev"));
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(cookieParser());
@@ -62,11 +62,11 @@ export class ServerApp {
         this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
             // set locals, only providing error in development
             res.locals.message = err.message;
-            res.locals.error = req.app.get('env') === 'development' ? err : {};
+            res.locals.error = req.app.get("env") === "development" ? err : {};
 
             // render the error page
             res.status(err.status || 500);
-            res.render('error');
+            res.render("error");
         });
     }
 
@@ -76,7 +76,7 @@ export class ServerApp {
 
     private listen() {
         this.server.listen(this.port, () => {
-            console.log('Running server on port %s', this.port);
+            console.log("Running server on port %s", this.port);
         });
     }
 
@@ -88,9 +88,9 @@ export class ServerApp {
      */
     public connectDB() {
         mongoose.connect(process.env.DB_URI, { useNewUrlParser: true }).then(() => {
-            console.log('Connection has been established successfully.');
+            console.log("Connection has been established successfully.");
         }).catch((err) => {
-            console.error('Unable to connect to the database:', err);
+            console.error("Unable to connect to the database:", err);
         });
     }
 
@@ -104,7 +104,7 @@ export class ServerApp {
         let router: express.Router;
         router = express.Router();
         RentalRoute.create(router);
-        this.app.use('/api/v1', router);
+        this.app.use("/api/v1", router);
     }
 
     public getApp(): express.Application {

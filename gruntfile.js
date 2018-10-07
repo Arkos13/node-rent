@@ -35,13 +35,23 @@ module.exports = function (grunt) {
                 tasks: ["ts:app"]
             }
         },
+        tslint: {
+            options: {
+             configuration: grunt.file.readJSON("tslint.json")
+            },
+            all: {
+            src: ["src/\*\*/\*.ts", "!node_modules/**/*.ts"] // avoid linting typings files and node_modules files
+            }
+        },
     });
 
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-ts");
+    grunt.loadNpmTasks("grunt-tslint");
     grunt.loadNpmTasks("grunt-nodemon");
 
     grunt.registerTask("default", [
-        "ts:app"
+      "tslint:all",
+      "ts:app"
     ]);
 };
