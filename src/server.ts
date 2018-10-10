@@ -1,10 +1,12 @@
 import * as cookieParser from "cookie-parser";
+import * as body_parser from "body-parser";
 import * as express from "express";
 import * as logger from "morgan";
 import * as mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import {createServer, Server} from "http";
 import {RentalRoute} from "./routes/rentals";
+import { UserRoute } from "./routes/user";
 
 dotenv.config();
 
@@ -51,6 +53,7 @@ export class ServerApp {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(cookieParser());
+        this.app.use(body_parser.json());
 
         // catch 404 and forward to error handler
         this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -104,6 +107,7 @@ export class ServerApp {
         let router: express.Router;
         router = express.Router();
         RentalRoute.create(router);
+        UserRoute.create(router);
         this.app.use("/api/v1", router);
     }
 
