@@ -1,5 +1,5 @@
 import {UserModel, IUser} from "../models/user";
-import {Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -72,5 +72,38 @@ export class UserController {
       });
     });
 
+  }
+
+  /**
+   * @param req{Request}
+   * @param res{Response}
+   * @param next{NextFunction}
+   * */
+  public static authMiddleware(req: Request, res: Response, next: NextFunction) {
+    const token = req.headers.authorization;
+    if (token) {
+      const user = UserController.parseToken(token);
+      UserModel.findById((<any>user).userId, function(err: Error, existingUser: IUser) {
+        if (err) {
+          return res.status(422).send({errors: err.message});
+        }
+        if (existingUser) {
+          res.locals.user = user;
+          next();
+        } else {
+          return UserController.notAuthorized(res);
+        }
+      })
+    } else {
+      return UserController.notAuthorized(res);
+    }
+  }
+
+  private static parseToken(token: string) {
+    return jwt.verify(token.split(' ')[1], process.env.SECRET);
+  }
+
+  private static notAuthorized(res: Response) {
+    return res.status(401).send({errors: [{title: 'Not authorized!', detail: 'You need to login to get access!'}]});
   }
 }

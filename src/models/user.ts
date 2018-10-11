@@ -1,5 +1,12 @@
 import {Document, model, Model, Schema} from "mongoose";
-import {compareSync} from "bcrypt";
+import {compareSync, genSalt, hash} from "bcrypt";
+import { NextFunction } from "express";
+
+interface IUser extends Document {
+  username: string;
+  email: string;
+  password: string;
+}
 
 const userSchema: Schema = new Schema({
   username: {
@@ -29,16 +36,15 @@ userSchema.method("hasSamePassword", function(requestedPassword): boolean {
   return compareSync(requestedPassword, this.password);
 });
 
-/** TODO add hash for password*/
-userSchema.pre("save", function(next) {
+userSchema.pre<IUser>("save", function(next: NextFunction) {
   const user = this;
+  genSalt(10, function(err, salt) {
+    hash(user.password, salt, function(err, hash) {
+      user.password = hash;
+      next();
+    });
+  });
 });
-
-interface IUser extends Document {
-  username: string;
-  email: string;
-  password: string;
-}
 
 const UserModel: Model<IUser> = model<IUser>("User", userSchema);
 
