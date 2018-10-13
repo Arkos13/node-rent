@@ -54,4 +54,10 @@ module.exports = function (grunt) {
       "tslint:all",
       "ts:app"
     ]);
+
+    grunt.registerTask("run", [
+        "tslint:all",
+        "ts:app",
+        "nodemon:dev",
+    ]);
 };

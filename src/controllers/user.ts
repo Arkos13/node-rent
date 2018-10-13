@@ -15,14 +15,14 @@ export class UserController {
     if (!password || !email) {
       return res.status(422).send({errors: [{title: "Data missing!", detail: "Provide email and password!"}]});
     }
-    UserModel.find({email: email}, function(err: Error, user: IUser) {
+    UserModel.findOne({email: email}, function(err: Error, user: IUser) {
       if (err) {
         return res.status(422).send({errors: err.message});
       }
       if (!user) {
         return res.status(422).send({errors: [{title: "Invalid User!", detail: "User does not exist"}]});
       }
-      if (user.schema.methods.hasSamePassword(password)) {
+      if (user.hasSamePassword(password)) {
         const token = jwt.sign({
           userId: user.id,
           username: user.username
@@ -93,17 +93,17 @@ export class UserController {
         } else {
           return UserController.notAuthorized(res);
         }
-      })
+      });
     } else {
       return UserController.notAuthorized(res);
     }
   }
 
   private static parseToken(token: string) {
-    return jwt.verify(token.split(' ')[1], process.env.SECRET);
+    return jwt.verify(token.split(" ")[1], process.env.SECRET);
   }
 
   private static notAuthorized(res: Response) {
-    return res.status(401).send({errors: [{title: 'Not authorized!', detail: 'You need to login to get access!'}]});
+    return res.status(401).send({errors: [{title: "Not authorized!", detail: "You need to login to get access!"}]});
   }
 }

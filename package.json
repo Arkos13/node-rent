@@ -11,21 +11,21 @@
   "author": "",
   "private": true,
   "dependencies": {
+    "bcrypt": "^2.0.1",
     "cookie-parser": "^1.4.3",
-    "debug": "^3.1.0",
-    "dotenv": "^6.0.0",
-    "express": "^4.16.3",
+    "debug": "^3.2.6",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
     "express-jwt": "^5.3.1",
     "express-rate-limit": "^2.12.2",
-    "helmet": "^3.13.0",
+    "helmet": "^3.14.0",
     "http-errors": "^1.7.0",
     "jsonwebtoken": "^8.3.0",
     "method-override": "^3.0.0",
     "moment": "^2.22.2",
+    "mongoose": "^5.3.3",
     "morgan": "~1.9.0",
-    "reflect-metadata": "^0.1.12",
-    "mongoose": "^5.3.1",
-    "bcrypt": "^2.0.1"
+    "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -39,9 +39,9 @@
     "@types/jsonwebtoken": "^7.2.8",
     "@types/method-override": "0.0.31",
     "@types/moment": "^2.13.0",
-    "@types/mongoose": "^5.2.18",
+    "@types/mongoose": "^5.2.19",
     "@types/morgan": "^1.7.35",
-    "@types/node": "^10.7.1",
+    "@types/node": "^10.11.7",
     "codelyzer": "^4.5.0",
     "grunt": "^1.0.3",
     "grunt-concurrent": "^2.3.1",
@@ -54,6 +54,6 @@
     "sequelize-typescript": "^0.6.6",
     "ts-md5": "^1.2.4",
     "tslint": "^5.11.0",
-    "typescript": "^3.0.1"
+    "typescript": "^3.1.3"
   }
 }

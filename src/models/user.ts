@@ -2,10 +2,11 @@ import {Document, model, Model, Schema} from "mongoose";
 import {compareSync, genSalt, hash} from "bcrypt";
 import { NextFunction } from "express";
 
-interface IUser extends Document {
+export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
+  hasSamePassword(password: string): boolean;
 }
 
 const userSchema: Schema = new Schema({
@@ -32,9 +33,9 @@ const userSchema: Schema = new Schema({
   rentals: [{type: Schema.Types.ObjectId, ref: "Rental"}],
 });
 
-userSchema.method("hasSamePassword", function(requestedPassword): boolean {
+userSchema.methods.hasSamePassword = function(requestedPassword: string): boolean {
   return compareSync(requestedPassword, this.password);
-});
+};
 
 userSchema.pre<IUser>("save", function(next: NextFunction) {
   const user = this;
@@ -46,6 +47,4 @@ userSchema.pre<IUser>("save", function(next: NextFunction) {
   });
 });
 
-const UserModel: Model<IUser> = model<IUser>("User", userSchema);
-
-export {UserModel, IUser};
+export const UserModel: Model<IUser> = model<IUser>("User", userSchema);
