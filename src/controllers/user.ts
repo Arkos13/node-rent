@@ -17,7 +17,7 @@ export class UserController {
     }
     UserModel.findOne({email: email}, function(err: Error, user: IUser) {
       if (err) {
-        return res.status(422).send({errors: err.message});
+        return res.status(422).send({errors: [{title: "Query error!", detail: err.message}]});
       }
       if (!user) {
         return res.status(422).send({errors: [{title: "Invalid User!", detail: "User does not exist"}]});
@@ -51,7 +51,7 @@ export class UserController {
 
     UserModel.findOne({email: email}, function(err: Error, existingUser: IUser) {
       if (err) {
-        return res.status(422).send({errors: err.message});
+        return res.status(422).send({errors: [{title: "Query error!", detail: err.message}]});
       }
 
       if (existingUser) {
@@ -66,7 +66,7 @@ export class UserController {
 
       user.save(function(err: Error) {
         if (err) {
-          return res.status(422).send({errors: err.message});
+          return res.status(422).send({errors: [{title: "Save error!", detail: err.message}]});
         }
         return res.json({"registered": true});
       });
@@ -85,7 +85,7 @@ export class UserController {
       const user = UserController.parseToken(token);
       UserModel.findById((<any>user).userId, function(err: Error, existingUser: IUser) {
         if (err) {
-          return res.status(422).send({errors: err.message});
+          return res.status(422).send({errors: [{title: "Query error!", detail: err.message}]});
         }
         if (existingUser) {
           res.locals.user = user;

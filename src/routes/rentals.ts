@@ -16,13 +16,13 @@ export class RentalRoute {
      * @static
      */
     public static create(router: Router) {
-        router.route("/rentals").get(UserController.authMiddleware, function (req: Request, res: Response) {
+        router.route("/rentals").get(function (req: Request, res: Response) {
             RentalController.getRentals(req, res, function (data) {
                 return res.json(data);
             });
         });
 
-        router.route("/rentals/:id").get(UserController.authMiddleware, function (req: Request, res: Response) {
+        router.route("/rentals/:id").get(function (req: Request, res: Response) {
             RentalController.getRentalById(req, res, function (data) {
                 return res.json(data);
             });
