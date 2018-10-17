@@ -7,6 +7,7 @@ import * as dotenv from "dotenv";
 import {createServer, Server} from "http";
 import {RentalRoute} from "./routes/rentals";
 import { UserRoute } from "./routes/user";
+import { BookingRoute } from "./routes/booking";
 
 dotenv.config();
 
@@ -108,6 +109,7 @@ export class ServerApp {
         router = express.Router();
         RentalRoute.create(router);
         UserRoute.create(router);
+        BookingRoute.create(router);
         this.app.use("/api/v1", router);
     }
 

@@ -1,4 +1,6 @@
-import {Document, model, Model, Schema} from "mongoose";
+import { Document, model, Model, Schema } from "mongoose";
+import { IUser } from "./user";
+import { IBooking } from "./booking";
 
 const rentalSchema: Schema = new Schema({
     title: {
@@ -36,9 +38,10 @@ const rentalSchema: Schema = new Schema({
         default: Date.now
     },
     user: { type: Schema.Types.ObjectId, ref: "User" },
+    bookings: [{ type: Schema.Types.ObjectId, ref: "Booking" }]
 });
 
-interface IRental extends Document {
+export interface IRental extends Document {
     title: string;
     city: string;
     street: string;
@@ -49,6 +52,8 @@ interface IRental extends Document {
     description: string;
     dailyRate: number;
     createdAt: Date;
+    user: IUser;
+    bookings: Array<IBooking>;
 }
 
 const RentalModel: Model<IRental> = model<IRental>("Rental", rentalSchema);

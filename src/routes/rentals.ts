@@ -16,6 +16,7 @@ export class RentalRoute {
      * @static
      */
     public static create(router: Router) {
+        router.route("/rentals/manage").get(UserController.authMiddleware, RentalController.getRentalsByCurrentUser);
         router.route("/rentals").get(function (req: Request, res: Response) {
             RentalController.getRentals(req, res, function (data) {
                 return res.json(data);
@@ -27,5 +28,11 @@ export class RentalRoute {
                 return res.json(data);
             });
         });
+
+
+        router.route("/rentals/:id/verify-user").get(UserController.authMiddleware, RentalController.checkVerifyUser);
+        router.route("/rentals/new").post(UserController.authMiddleware, RentalController.addRental);
+        router.route("/rentals/edit/:id").patch(UserController.authMiddleware, RentalController.editRental);
+        router.route("/rentals/delete/:id").delete(UserController.authMiddleware, RentalController.deleteRental);
     }
 }

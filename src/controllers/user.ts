@@ -88,7 +88,7 @@ export class UserController {
           return res.status(422).send({errors: [{title: "Query error!", detail: err.message}]});
         }
         if (existingUser) {
-          res.locals.user = user;
+          res.locals.user = existingUser;
           next();
         } else {
           return UserController.notAuthorized(res);

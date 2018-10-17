@@ -1,11 +1,15 @@
 import {Document, model, Model, Schema} from "mongoose";
 import {compareSync, genSalt, hash} from "bcrypt";
 import { NextFunction } from "express";
+import { IRental } from "./rental";
+import { IBooking } from "./booking";
 
 export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
+  rentals: Array<IRental>;
+  bookings: Array<IBooking>;
   hasSamePassword(password: string): boolean;
 }
 
@@ -31,6 +35,7 @@ const userSchema: Schema = new Schema({
     required: "Password is required"
   },
   rentals: [{type: Schema.Types.ObjectId, ref: "Rental"}],
+  bookings: [{ type: Schema.Types.ObjectId, ref: "Booking" }]
 });
 
 userSchema.methods.hasSamePassword = function(requestedPassword: string): boolean {
