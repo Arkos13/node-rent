@@ -44,6 +44,9 @@ userSchema.methods.hasSamePassword = function(requestedPassword: string): boolea
 
 userSchema.pre<IUser>("save", function(next: NextFunction) {
   const user = this;
+  if (!user.isModified("password")) {
+    return next();
+  }
   genSalt(10, function(err, salt) {
     hash(user.password, salt, function(err, hash) {
       user.password = hash;
