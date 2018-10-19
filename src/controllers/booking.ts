@@ -11,7 +11,7 @@ export class BookingController {
    * @param res{Response}
    * */
   public static createBooking(req: Request, res: Response) {
-    const { startAt, endAt, totalPrice, guests, days, rentalId } = req.body;
+    const { startAt, endAt, totalPrice, guests, days, rental } = req.body;
     const user: IUser = res.locals.user;
     const booking = new BookingModel({
       startAt,
@@ -19,7 +19,7 @@ export class BookingController {
       totalPrice,
       guests,
       days});
-    RentalModel.findById(rentalId)
+    RentalModel.findById(rental._id)
       .populate("bookings")
       .populate("user")
       .exec(function(err: Error, foundRental: IRental) {
