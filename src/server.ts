@@ -58,6 +58,7 @@ export class ServerApp {
 
         this.app.use(function (req: express.Request, res: express.Response, next: express.NextFunction) {
             res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PATCH");
             res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
             next();
         });
