@@ -56,6 +56,12 @@ export class ServerApp {
         this.app.use(cookieParser());
         this.app.use(body_parser.json());
 
+        this.app.use(function (req: express.Request, res: express.Response, next: express.NextFunction) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
+
         // catch 404 and forward to error handler
         this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
             err.status = 404;
