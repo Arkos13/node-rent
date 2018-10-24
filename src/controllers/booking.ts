@@ -13,32 +13,33 @@ export class BookingController {
   public static createBooking(req: Request, res: Response) {
     const { startAt, endAt, totalPrice, guests, days, rental } = req.body;
     const user: IUser = res.locals.user;
-    const booking = new BookingModel({
-      startAt,
-      endAt,
-      totalPrice,
-      guests,
-      days});
     RentalModel.findById(rental._id)
       .populate("bookings")
       .populate("user")
-      .exec(function(err: Error, foundRental: IRental) {
+      .exec(function(err: Error, rental: IRental) {
         if (err) {
           return res.status(422).send({errors: [{title: "Invalid Query!", detail: err.message}]});
         }
-        if (foundRental.user && foundRental.user.id === user.id) {
+        if (rental.user && rental.user.id === user.id) {
           return res.status(422).send({errors: [{title: "Invalid User!", detail: "Cannot create booking on your Rental!"}]});
         }
-        if (BookingController.isValidBooking(booking, foundRental)) {
-          booking.user = user;
-          booking.renal = foundRental;
-          foundRental.bookings.push(booking);
+        const booking = new BookingModel({
+          startAt,
+          endAt,
+          totalPrice,
+          guests,
+          days,
+          user,
+          rental
+        });
+        if (BookingController.isValidBooking(booking, rental)) {
+          rental.bookings.push(booking);
           user.bookings.push(booking);
           booking.save((err: Error) => {
             if (err) {
               return res.status(422).send({errors: [{title: "Invalid Query!", detail: err.message}]});
             }
-            foundRental.save();
+            rental.save();
             user.save();
             return res.json({startAt: booking.startAt, endAt: booking.endAt});
           });
