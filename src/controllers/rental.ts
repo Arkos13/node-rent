@@ -1,6 +1,7 @@
 import { IRental, RentalModel } from "../models/rental";
 import {Request, Response} from "express";
 import { IUser, UserModel } from "../models/user";
+import {ImageUpload} from "../services/image-upload";
 
 export class RentalController {
 
@@ -166,5 +167,19 @@ export class RentalController {
             return res.json({"status": "deleted"});
           });
         });
+    }
+
+  /**
+   * @param req{Request}
+   * @param res{Response}
+   * */
+    public static imageUpload(req: Request, res: Response) {
+      const singleUpload = ImageUpload.getMulter().single("image");
+      singleUpload(req, res, function(err) {
+        if (err) {
+          return res.status(422).send({errors: [{title: "Image Upload Error", detail: err.message}]});
+        }
+        return res.json({"imageUrl": (<any>req.file).location});
+      });
     }
 }

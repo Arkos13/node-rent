@@ -34,5 +34,6 @@ export class RentalRoute {
         router.route("/rentals/new").post(UserController.authMiddleware, RentalController.addRental);
         router.route("/rentals/edit/:id").patch(UserController.authMiddleware, RentalController.editRental);
         router.route("/rentals/delete/:id").delete(UserController.authMiddleware, RentalController.deleteRental);
+        router.route("/rentals/image-upload").post(UserController.authMiddleware, RentalController.imageUpload);
     }
 }
