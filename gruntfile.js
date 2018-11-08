@@ -25,7 +25,11 @@ module.exports = function (grunt) {
                     sourceMap: false,
                     rootDir: "src",
                     experimentalDecorators: true,
-                    emitDecoratorMetadata: true
+                    emitDecoratorMetadata: true,
+                    compilerOptions: {
+                      experimentalDecorators: true,
+                      lib: [ "es2015" ]
+                    }
                 }
             }
         },
