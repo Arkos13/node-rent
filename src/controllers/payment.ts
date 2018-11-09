@@ -40,14 +40,14 @@ export class PaymentController {
     PaymentModel.findById(payment._id)
       .populate("toUser")
       .populate("booking")
-      .exec((err: Error, foundPayment: IPayment) => {
+      .exec(async (err: Error, foundPayment: IPayment) => {
         if (err) {
-          return res.status(422).send({errors: [{title: "Invalid Query!", detail: err.message}]});
+          return res.status(422).send({ errors: [{ title: "Invalid Query!", detail: err.message }] });
         }
         if (foundPayment.status === "pending" && user.id === foundPayment.toUser.id) {
           const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
           const booking: IBooking = foundPayment.booking;
-          const charge = stripe.charges.create({
+          const charge = await stripe.charges.create({
             amount: booking.totalPrice,
             currency: "usd",
             customer: foundPayment.fromStripeCustomerId
@@ -59,15 +59,15 @@ export class PaymentController {
             foundPayment.status = "paid";
             foundPayment.save((err: Error) => {
               if (err) {
-                return res.status(422).send({errors: [{title: "Invalid Query!", detail: err.message}]});
+                return res.status(422).send({ errors: [{ title: "Invalid Query!", detail: err.message }] });
               }
-              UserModel.update({_id: foundPayment.toUser},
-                { $inc: {revenue: foundPayment.amount}},
+              UserModel.update({ _id: foundPayment.toUser },
+                { $inc: { revenue: foundPayment.amount } },
                 (err: Error, user: IUser) => {
                   if (err) {
-                    return res.status(422).send({errors: [{title: "Invalid Query!", detail: err.message}]});
+                    return res.status(422).send({ errors: [{ title: "Invalid Query!", detail: err.message }] });
                   }
-                  return res.json({status: "paid"});
+                  return res.json({ status: "paid" });
                 });
             });
           }
@@ -80,14 +80,14 @@ export class PaymentController {
    * @param res{Response}
    * */
   public static declinePayment(req: Request, res: Response) {
-    const payment = req.body;
+    const payment: IPayment = req.body;
     const { booking }: {booking: IBooking} = payment;
-    BookingModel.deleteOne({id: booking._id}, (err: Error) => {
+    BookingModel.deleteOne({_id: booking._id}, (err: Error) => {
       if (err) {
         return res.status(422).send({errors: [{title: "Invalid Query!", detail: err.message}]});
       }
-      PaymentModel.update({_id: payment._id}, {status: "declined"});
-      RentalModel.update({_id: booking.renal}, {$pull: {bookings: booking._id}});
+      PaymentModel.deleteOne({_id: payment._id});
+      RentalModel.update({_id: booking.renal._id}, {$pull: {bookings: booking._id}});
       return res.json({status: "deleted"});
     });
   }
