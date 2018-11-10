@@ -2,9 +2,59 @@ import {UserModel, IUser} from "../models/user";
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
+import { IRental, RentalModel } from "../models/rental";
 dotenv.config();
 
 export class UserController {
+
+  /**
+   * @param req{Request}
+   * @param res{Response}
+   * */
+  public static getUser(req: Request, res: Response) {
+    const requestedUserId = req.params.id;
+    const user: IUser = res.locals.user;
+    if (requestedUserId === user.id) {
+      UserModel.findById(requestedUserId, (err: Error, foundUser: IUser) => {
+        if (err) {
+          return res.status(422).send({errors: [{title: "Query error!", detail: err.message}]});
+        }
+        return res.json(foundUser);
+      });
+    } else {
+      UserModel.findById(requestedUserId)
+        .select("-revenue -stripeCustomerId -password")
+        .exec((err: Error, foundUser: IUser) => {
+        if (err) {
+          return res.status(422).send({errors: [{title: "Query error!", detail: err.message}]});
+        }
+        return res.json(foundUser);
+      });
+    }
+  }
+
+  /**
+   * @param req{Request}
+   * @param res{Response}
+   * */
+  public static editUser(req: Request, res: Response) {
+    const userData = req.body;
+    const user: IUser = res.locals.user;
+    UserModel
+      .findById(user.id)
+      .exec(function(err: Error, userFound: IUser) {
+        if (err) {
+          return res.status(422).send({errors: [{title: "Invalid Query!", detail: err.message}]});
+        }
+        userFound.set(userData);
+        userFound.save(function(err: Error) {
+          if (err) {
+            return res.status(422).send({errors: [{title: "Invalid Query!", detail: err.message}]});
+          }
+          return res.status(200).send(userFound);
+        });
+      });
+  }
 
   /**
    * @param req{Request}
