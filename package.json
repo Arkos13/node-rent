@@ -29,7 +29,9 @@
     "multer-s3": "^2.7.0",
     "aws-sdk": "^2.345.0",
     "reflect-metadata": "^0.1.12",
-    "stripe": "^6.13.0"
+    "stripe": "^6.13.0",
+    "js-yaml": ">=3.13.1",
+    "event-stream": ">=4.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
